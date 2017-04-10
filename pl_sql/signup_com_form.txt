@@ -1,0 +1,81 @@
+--The sign up for a company form.
+
+--Button:
+
+
+
+PACKAGE button_tg IS
+  PROCEDURE bt_new;
+  PROCEDURE bt_add;
+  PROCEDURE bt_log;
+  PROCEDURE bt_com;
+  Procedure back_log;
+END;
+
+PACKAGE BODY Button_tg IS
+  PROCEDURE bt_new IS
+  	begin
+  		:signup_bl.id := company_id_seq.nextval;
+  		:signup_bl.addressid := address_id_seq.nextval;
+  	end bt_new;
+  	
+  	PROCEDURE bt_add IS
+  		begin
+  			insert into paddress values
+				(:signup_bl.addressid, :signup_bl.street, :signup_bl.city, :signup_bl.state, :signup_bl.country, :signup_bl.zip);
+  		end bt_add;
+  	
+  	PROCEDURE bt_log IS
+  		begin
+  			insert into pcomlogin_information values
+				(:signup_bl.email, :signup_bl.password);
+  		end bt_log;
+  		
+  	PROCEDURE bt_com IS
+  			begin
+  				insert into pcompany values
+  				(:signup_bl.id, :signup_bl.name, :signup_bl.phone, :signup_bl.email, :signup_bl.account, :signup_bl.addressid);
+  				end bt_com;
+  				
+  	PROCEDURE BACK_LOG IS
+  			BEGIN
+  				CLEAR_FORM;
+  				OPEN_FORM('C:\Users\jl26123\Desktop\project\COMPANY');
+  				END BACK_LOG;		
+		
+		
+END;
+
+
+
+--Alerts
+
+
+
+
+PACKAGE create_al IS
+  PROCEDURE cal;
+END;
+
+PACKAGE BODY create_al IS
+  PROCEDURE cal IS
+  ALERT_BTN NUMBER;
+
+     BEGIN
+  
+        ALERT_BTN := SHOW_ALERT('createal');
+  
+        IF ALERT_BTN = ALERT_BUTTON1 THEN
+  	
+  	       COMMIT;
+  	       MESSAGE('User create');
+ 
+        ELSE
+  	
+           ROLLBACK;
+           MESSAGE('User not create');
+  
+        END IF;
+        
+     END cal;
+END;

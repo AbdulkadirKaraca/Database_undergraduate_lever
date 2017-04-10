@@ -1,0 +1,312 @@
+---the customer form
+
+--button
+
+PACKAGE button IS
+  PROCEDURE login_button;
+  PROCEDURE BACK;
+  PROCEDURE	 personal_update;
+  PROCEDURE card_update;
+  PROCEDURE card_delect;
+  PROCEDURE order_new;
+  PROCEDURE goods_view;
+  PROCEDURE ships_view;
+  PROCEDURE ordersubmit;
+  PROCEDURE ordercal;
+  PROCEDURE PAYORDER;
+  PROCEDURE CARDVIEW;
+  PROCEDURE ORDERVIEW;
+  PROCEDURE EXIT_B;
+  PROCEDURE SIGNUP_B;
+	
+END;
+
+PACKAGE BODY button IS
+  PROCEDURE login_button is
+  v_email pcustlogin_infr.cust_email%type;
+  v_password pcustlogin_infr.password%type;
+  begin
+  	Select cust_email, password 
+  	into v_email, v_password
+  	from pcustlogin_infr
+  	where :loginfirst_blc.cust_email = cust_email and :loginfirst_blc.password = password;
+  	go_block('customer_blc');
+  	execute_query;
+  	Exception
+		When NO_DATA_FOUND then
+		message('Invalid Login!');
+		Clear_form;
+  	end	login_button;
+  PROCEDURE	back is
+  	begin
+  		clear_form;
+  		open_form('C:\Users\jl26123\Desktop\project\login_form');
+  	end back;	 
+  	 
+  PROCEDURE personal_update is
+   
+  	begin
+
+  		update paddress
+  		set
+  			street = :address_blc.street,
+  			city = :address_blc.city,
+  			state = :address_blc.state,
+  			country = :address_blc.country,
+  			zip = :address_blc.zip
+  		where address_id = :address_blc.address_id;
+  		
+  		update pcustlogin_infr
+  		set
+  			password = :login_blc.password
+  		where cust_email = :customer_blc.c_email;
+  		
+  		update pcustomer
+  		set
+  			c_last = :customer_blc.c_last,
+  			c_first = :customer_blc.c_first,
+  			c_mi = :customer_blc.c_mi,
+  			c_phone = :customer_blc.c_phone,
+  			c_email = :customer_blc.c_email,
+  			c_birthdate = :customer_blc.c_birthdate
+  			where c_id = :customer_blc.c_id;
+ 
+  	end personal_update;	
+  	
+  	
+  	PROCEDURE	 CARD_UPDATE is
+  		begin
+  			insert into pcard_information
+  			values(
+  				 :card_ins.code,
+  				 :card_ins.type,
+  				 :card_ins.cvv,
+  				 :customer_blc.c_id);
+  				
+  				
+  		end card_update;
+  		
+  		
+  		PROCEDURE card_delect is
+  		begin
+  			Delete from pcard_information
+  			where card_code = :card_ins.code;
+  		end card_delect;
+  		
+  		PROCEDURE order_new is
+  		begin
+  			:orderadd_blc.order_number :=orders_id_seq.nextval;
+  			:orderadd_blc.order_data := current_timestamp;
+  			:orderadd_blc.c_id := :customer_blc.c_id;
+  		end order_new;
+  		PROCEDURE goods_view is
+  			begin
+  				go_item('orderadd_blc.goods_id');
+  				list_values;
+  			end goods_view;
+  			
+  			
+  			PROCEDURE SHIPS_VIEW IS
+  			begin
+  				go_item('ordership_blc.ship_number');
+  				list_values;
+  			end ships_view;
+  			
+  			PROCEDURE ordersubmit is
+  			begin
+  				insert into porder_information values
+  				(:orderadd_blc.order_number, :orderadd_blc.order_data, :orderadd_blc.order_quantity,
+  				:orderadd_blc.order_tax, :orderadd_blc.order_totalprice, :orderadd_blc.c_id, 
+  				:ordership_blc.ship_number, :orderadd_blc.goods_id );
+  			end ordersubmit;
+  			
+  			PROCEDURE ordercal is
+  			begin
+  				:orderadd_blc.order_tax := :orderadd_blc.goods_price*:orderadd_blc.order_quantity*0.05;
+  				:orderadd_blc.order_totalprice := :orderadd_blc.goods_price*:orderadd_blc.order_quantity+:orderadd_blc.order_tax+:ordership_blc.ship_fee;
+  			end ordercal;
+  			
+  			
+  			PROCEDURE PAYORDER IS
+  			begin
+  				insert into ppay_state values
+  				(:makepay_blc.card_code, :makepay_blc.order_number, 'yes',current_timestamp);
+  			end payorder;
+  			
+  			PROCEDURE CARDVIEW IS
+  				BEGIN
+  					go_item('makepay_blc.card_code');
+  					list_values;
+  				end cardview;
+  				
+  				
+  				PROCEDURE ORDERVIEW IS
+  					begin
+  					go_item('makepay_blc.order_number');
+  					list_values;
+  					end orderview;
+  					
+  				
+					PROCEDURE EXIT_B IS
+					BEGIN
+						clear_form;
+						go_block('loginfirst_blc');
+					end exit_b;
+					
+					
+					PROCEDURE SIGNUP_B IS
+						begin
+							clear_form;
+							open_form('C:\Users\jl26123\Desktop\project\signup_cust');
+							end signup_b;
+END;
+
+
+
+
+
+---alerts
+
+PACKAGE alerts IS
+  PROCEDURE personalud_alt;
+  PROCEDURE carddelete_alt;
+  PROCEDuRE CARDADD_ALt;
+  PROCEDURE order_alt;
+  PROCEDURE pay_alt;
+END;
+
+
+PACKAGE BODY alerts IS
+  PROCEDURE personalud_alt is
+  ALERT_BTN NUMBER;
+
+     BEGIN
+  
+        ALERT_BTN := SHOW_ALERT('personalupdate_alt');
+  
+        IF ALERT_BTN = ALERT_BUTTON1 THEN
+  				 go_block('address_blc');  				 
+  				 standard.commit;
+  				 go_block('login_blc');
+  				 standard.commit;
+  				 go_block('customer_blc');
+  				 standard.commit;
+  				 
+  	       MESSAGE('Your personal information is updated');
+ 
+        ELSE
+       
+        	rollback;
+          MESSAGE('Your personal information is not updated');
+  
+        END IF;
+     end personalud_alt;
+     
+     PROCEDURE carddelete_alt is
+  		ALERT_BTN NUMBER;
+
+     BEGIN
+  
+        ALERT_BTN := SHOW_ALERT('card_delete');
+  
+        IF ALERT_BTN = ALERT_BUTTON1 THEN
+  				 
+  				 go_block('card_ins');
+  				 standard.commit;
+  				 go_block('card_blc');
+  				 execute_query;
+  				 
+  	       MESSAGE('Your card information is deleted');
+ 
+        ELSE
+       
+        	rollback;
+  			
+  				
+           MESSAGE('Your card information is not delete');
+  
+        END IF;
+     end carddelete_alt;
+     
+     PROCEDURE cardadd_alt is
+  		ALERT_BTN NUMBER;
+
+     BEGIN
+  
+        ALERT_BTN := SHOW_ALERT('card_add');
+  
+        IF ALERT_BTN = ALERT_BUTTON1 THEN
+  				 
+  				 go_block('card_ins');
+  				 standard.commit;
+  				 go_block('card_blc');
+  				 execute_query;
+  				 
+  	       MESSAGE('Your card information is added');
+ 
+        ELSE
+       
+        	rollback;
+  			
+  				
+           MESSAGE('Your card information is not added');
+  
+        END IF;
+     end cardadd_alt;
+     
+     PROCEDURE ORDER_ALT IS
+     	ALERT_BTN NUMBER;
+
+     BEGIN
+  
+        ALERT_BTN := SHOW_ALERT('order_alt');
+  
+        IF ALERT_BTN = ALERT_BUTTON1 THEN
+  				 
+  				 go_block('orderadd_blc');
+  				 standard.commit;
+  				 go_block('order_blc');
+  				 execute_query;
+  				 
+  	       MESSAGE('Your order information is submitted');
+ 
+        ELSE
+       
+        	rollback;
+  			
+  				
+           MESSAGE('Your order information is not submitted');
+  
+        END IF;
+     end order_alt;
+     
+     PROCEDURE PAY_ALT IS
+   		ALERT_BTN NUMBER;
+
+     	BEGIN
+  
+        ALERT_BTN := SHOW_ALERT('pay_alt');
+  
+        IF ALERT_BTN = ALERT_BUTTON1 THEN
+  				 
+  				 go_block('makepay_blc');
+  				 standard.commit;
+  				 go_block('order_blc');
+  				 execute_query;
+  				 
+  	       MESSAGE('You have paid the order');
+ 
+        ELSE
+       
+        	rollback;
+  			
+  				
+           MESSAGE('You have not paid the order ');
+  
+        END IF;
+     end pay_alt;
+     	
+END;
+
+
+

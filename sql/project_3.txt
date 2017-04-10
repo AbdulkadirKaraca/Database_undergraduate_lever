@@ -1,0 +1,129 @@
+DROP TABLE Pcustomer CASCADE CONSTRAINTS;
+DROP TABLE Paddress CASCADE CONSTRAINTS;
+DROP TABLE Pcompany CASCADE CONSTRAINTS;
+DROP TABLE Pcustlogin_infr CASCADE CONSTRAINTS;
+DROP TABLE Pcomlogin_information CASCADE CONSTRAINTS;
+DROP TABLE Pship_information CASCADE CONSTRAINTS;
+DROP TABLE Pgoods_information CASCADE CONSTRAINTS;
+DROP TABLE Porder_information CASCADE CONSTRAINTS;
+DROP TABLE Pcard_information CASCADE CONSTRAINTS;
+DROP TABLE Ppay_state CASCADE CONSTRAINTS;
+DROP TABLE Pgoods_class CASCADE CONSTRAINTS;
+
+
+
+CREATE TABLE Pcustlogin_infr
+(cust_email VARCHAR2(30),
+password VARCHAR2(15) NOT NULL,
+CONSTRAINT Pcustlogin_infr_cust_email_pk PRIMARY KEY(cust_email));
+
+CREATE TABLE Paddress
+(address_id NUMBER(6),
+street VARCHAR2(30) NOT NULL,
+city VARCHAR2(30) NOT NULL,
+state VARCHAR2(10) NOT NULL,
+country VARCHAR2(20) NOT NULL,
+zip NUMBER(10) NOT NULL,
+CONSTRAINT Paddress_address_id_pk PRIMARY KEY(address_id));
+
+
+CREATE TABLE Pcustomer
+(c_id NUMBER(6),
+c_last VARCHAR2(30) NOT NULL,
+c_first VARCHAR2(30) NOT NULL,
+c_mi CHAR(1),
+c_phone NUMBER(10) NOT NULL,
+c_email VARCHAR2(30) NOT NULL,
+c_birthdate DATE NOT NULL,
+address_id NUMBER(6) NOT NULL,
+CONSTRAINT Pcustomer_c_id_pk PRIMARY KEY (c_id),
+CONSTRAINT Pcustomer_c_email_fk FOREIGN KEY (c_email) REFERENCES Pcustlogin_infr(cust_email),
+CONSTRAINT Pcustomer_address_fk FOREIGN KEY (address_id) REFERENCES Paddress(address_id),
+CONSTRAINT Pcustomer_c_phone_uk UNIQUE(c_phone),
+CONSTRAINT Pcustomer_c_email_uk UNIQUE(c_email));
+
+CREATE TABLE Pcard_information
+(card_code NUMBER(20),
+card_type VARCHAR(10) NOT NULL,
+card_cvv NUMBER(3) NOT NULL,
+c_id NUMBER(6) NOT NULL,
+CONSTRAINT Pcard_information_card_code_pk PRIMARY KEY (card_code),
+CONSTRAINT Pcard_information_card_code_fk FOREIGN KEY (c_id) REFERENCES Pcustomer(c_id));
+
+CREATE TABLE Pcomlogin_information
+(com_email VARCHAR2(30),
+password VARCHAR2(15) NOT NULL,
+CONSTRAINT Pcomlogin_information_email_pk PRIMARY KEY(com_email));
+
+CREATE TABLE Pcompany
+(comp_id NUMBER(6),
+comp_name VARCHAR2(50) NOT NULL,
+comp_phone VARCHAR2(10) NOT NULL,
+comp_email VARCHAR2(30) NOT NULL,
+comp_account VARCHAR2(20) NOT NULL,
+address_id NUMBER(6) NOT NULL,
+CONSTRAINT Pcompany_com_id_pk PRIMARY KEY (comp_id),
+CONSTRAINT Pcompany_comp_email_fk FOREIGN KEY (comp_email) REFERENCES Pcomlogin_information(com_email),
+CONSTRAINT Pcompany_address_id_fk FOREIGN KEY (address_id) REFERENCES Paddress(address_id),
+CONSTRAINT Pcompany_comp_phone_uk UNIQUE(comp_phone),
+CONSTRAINT Pcompany_comp_email_uk UNIQUE(comp_email));
+
+CREATE TABLE Pgoods_class
+(class_number NUMBER(6),
+class_name VARCHAR2(20) NOT NULL,
+CONSTRAINT Pgoods_class_number_pk PRIMARY KEY (class_number),
+CONSTRAINT Pgoods_class_name_uk UNIQUE(class_name)); 
+
+CREATE TABLE Pgoods_information
+(goods_id NUMBER(6),
+goods_name VARCHAR2(50) NOT NULL,
+goods_instroduce VARCHAR2(100) NOT NULL,
+goods_weight VARCHAR2(15) NOT NULL,
+goods_price NUMBER(8,2) NOT NULL,
+goods_marketprice NUMBER(8,2) NOT NULL,
+goods_pictureurl VARCHAR2(60) NOT NULL,
+goods_quantityinstock NUMBER(5) NOT NULL,
+class_number NUMBER(6) NOT NULL,
+comp_id NUMBER(6) NOT NULL,
+CONSTRAINT Pgoods_infr_goods_id_pk PRIMARY KEY (goods_id),
+CONSTRAINT Pgoods_infr_class_number_fk FOREIGN KEY (class_number) REFERENCES Pgoods_class(class_number),
+CONSTRAINT Pgoods_infr_comp_id_fk FOREIGN KEY(comp_id) REFERENCES Pcompany(comp_id),
+CONSTRAINT Pgoods_infr_goods_price_ck CHECK(goods_price>0),
+CONSTRAINT Pgoods_infr_marketprice_ck CHECK(goods_marketprice>0),
+CONSTRAINT Pgoods_infr_quan_instock_ck CHECK(goods_quantityinstock>=0));
+
+CREATE TABLE Pship_information
+(ship_number NUMBER(6),
+ship_type VARCHAR2(30) NOT NULL,
+ship_fee NUMBER(8,2) NOT NULL,
+goods_id NUMBER(6) NOT NULL,
+CONSTRAINT Pship_infr_ship_number_pk PRIMARY KEY (ship_number),
+CONSTRAINT Pship_infr_goods_id_fk FOREIGN KEY(goods_id) REFERENCES Pgoods_information(goods_id),
+CONSTRAINT Pship_infr_ship_fee_ck CHECK(ship_fee>=0));
+
+CREATE TABLE Porder_information
+(order_number NUMBER(8),
+order_data DATE NOT NULL,
+order_quantity NUMBER(5) NOT NULL,
+order_tax NUMBER(8,2) NOT NULL,
+order_totalprice NUMBER(8,2) NOT NULL,
+c_id NUMBER(6) NOT NULL,
+ship_number NUMBER(6) NOT NULL,
+goods_id NUMBER(6) NOT NULL,
+CONSTRAINT Porder_infr_order_number_pk PRIMARY KEY (order_number),
+CONSTRAINT Porder_infr_c_id_fk FOREIGN KEY(c_id) REFERENCES Pcustomer(c_id),
+CONSTRAINT Porder_infr_ship_number_fk FOREIGN KEY(ship_number) REFERENCES Pship_information(ship_number),
+CONSTRAINT Porder_infr_goods_id_fk FOREIGN KEY(goods_id) REFERENCES Pgoods_information(goods_id),
+CONSTRAINT Porder_infr_order_quantity_ck CHECK(order_quantity>0),
+CONSTRAINT Porder_infr_order_tax_ck CHECK(order_tax>=0),
+CONSTRAINT Porder_infr_totalprice_ck CHECK(order_totalprice>order_tax));
+
+CREATE TABLE Ppay_state
+(card_code NUMBER(20),
+order_number NUMBER(8),
+PRIMARY KEY(card_code, order_number),
+pay_state VARCHAR2(3) check(pay_state in('yes','no')) NOT NULL,
+pay_date DATE,
+CONSTRAINT Ppay_state_card_code_fk FOREIGN KEY(card_code) REFERENCES Pcard_information(card_code),
+CONSTRAINT Ppay_state_order_number_fk FOREIGN KEY(order_number) REFERENCES Porder_information(order_number));
+

@@ -1,0 +1,43 @@
+----the sign up for customer form
+
+---button
+
+PACKAGE button_tg IS
+  PROCEDURE button_new;
+  PROCEDURE button_add;
+  PROCEDURE button_log;
+  PROCEDURE button_per;
+  PROCEDURE BACK_B;
+END;
+
+PACKAGE BODY button_tg IS
+  PROCEDURE button_new IS	
+  	BEGIN
+  		:signup_block.id := customer_id_seq.nextval;
+  		:signup_block.aid := address_ID_SEQ.nextval;
+  	end;
+  	PROCEDURE button_add IS
+  		BEGIN
+  			insert into paddress values
+			(:signup_block.aid, :signup_block.street, :signup_block.city, :signup_block.state, :signup_block.country, :signup_block.zip);
+			commit;
+  		end;
+  	PROCEDURE button_log IS
+  		BEGIN
+  			insert into pcustlogin_infr values
+				(:signup_block.email, :signup_block.password);
+				commit;
+  		end;
+  	PROCEDURE button_per IS
+  		BEGIN
+  			insert into pcustomer values
+				(:signup_block.id, :signup_block.last, :signup_block.first, :signup_block.m, :signup_block.phone, :signup_block.email, :signup_block.birthday, :signup_block.aid);
+				commit;
+  		end;
+  		
+  		PROCEDURE BACK_B IS
+  			BEGIN
+  				CLEAR_FORM;
+  				OPEN_FORM('C:\Users\jl26123\Desktop\project\CUMSTOMER');
+  				END BACK_B;
+END;

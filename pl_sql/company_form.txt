@@ -1,0 +1,367 @@
+---The company form
+---Button
+
+
+
+PACKAGE button IS
+  PROCEDURE submit;
+  PROCEDURE back ;
+  PROCEDURE INFO_UPDATE;
+  PROCEDURE EXIT_b;
+  PROCEDURE GOODS_NEW;
+  PROCEDURE GOODS_VIEW;
+  PROCEDURE GOODS_UPDATE;
+  PROCEDURE GOODS_DELETE;
+  PROCEDURE SHIPVIEW;
+  PROCEDURE ship_ad;
+  PROCEDURE SHIP_DE;
+  PROCEDURE SHIP_UP;
+  PROCEDURE ORDER_VIEW;
+  PROCEDURE SIGNUP;
+
+END;
+
+PACKAGE BODY button IS
+  PROCEDURE submit IS
+  v_email pcomlogin_information.com_email%type;
+  v_password pcomlogin_information.password%type;
+  begin
+  	Select com_email, password 
+  	into v_email, v_password
+  	from pcomlogin_information
+  	where :login_blc.com_email = com_email and :login_blc.password = password;
+  	message('Successful!');
+  	go_block('company_blc');
+  	execute_query;
+ 	Exception
+		When NO_DATA_FOUND then
+		message('Invalid Login!');
+		Clear_form;
+ 	end submit;
+ 	
+ 	PROCEDURE back is
+ 	begin
+ 		Clear_form;
+ 		open_form('C:\Users\jl26123\Desktop\project\login_form');
+ 	end back;
+ 	
+ 	PROCEDURE info_update IS
+ 	begin
+ 		update paddress
+  		set
+  			street = :address_blc.street,
+  			city = :address_blc.city,
+  			state = :address_blc.state,
+  			country = :address_blc.country,
+  			zip = :address_blc.zip
+  		where address_id = :address_blc.address_id;
+  		
+  		update pcomlogin_information
+  		set
+  			password = :login_blc.password
+  		where com_email = :company_blc.comp_email;
+  		
+  		update pcompany
+  		set
+  			comp_name = :company_blc.comp_name,
+  			comp_phone = :company_blc.comp_phone,
+  			comp_email = :company_blc.comp_email,
+  			comp_account = :company_blc.comp_account
+  			where comp_id = :company_blc.comp_id;
+ 	end info_update;
+ 		
+ 		PROCEDURE exit_b IS
+ 		begin
+ 			clear_form;
+ 			open_form('C:\Users\jl26123\Desktop\project\company');
+ 		end exit_b;
+ 		
+ 		PROCEDURE GOODS_NEW IS
+ 		class_n number(6);
+ 		begin
+ 			if :class_blc.class_number is null then
+ 				class_n := :goods_blc.class_number;
+ 			else
+ 				class_n := :class_blc.class_number;
+ 			end if;
+ 			insert into pgoods_information values
+ 			(goods_id_seq.nextval, :goods_blc.goods_name, :goods_blc.goods_instroduce,
+ 			:goods_blc.goods_weight, :goods_blc.goods_price, :goods_blc.goods_marketprice,
+ 			'www.xxx.com', :goods_blc.goods_quantityinstock,class_n, :company_blc.comp_id	);
+ 		end goods_new;
+ 		
+ 		PROCEDURE GOODS_VIEW IS
+ 		begin
+  				go_item('GOODS_blc.goods_name');
+  				list_values;
+ 		end goods_view;
+ 		
+ 		PROCEDURE GOODS_UPDATE IS
+ 		class_n number(6);
+ 			begin
+ 				if :class_blc.class_number is null then
+ 				class_n := :goods_blc.class_number;
+ 				else
+ 				class_n := :class_blc.class_number;
+ 				end if;
+ 				update pgoods_information set
+ 				goods_name = :goods_blc.goods_name , 
+ 				goods_instroduce = :goods_blc.goods_instroduce,
+ 				goods_weight = :goods_blc.goods_weight, 
+ 				goods_price = :goods_blc.goods_price, 
+ 				goods_marketprice = :goods_blc.goods_marketprice,
+ 				goods_quantityinstock = :goods_blc.goods_quantityinstock,
+ 				class_number = class_n
+ 				where goods_id = :goods_blc.goods_id;
+ 			end goods_update;
+ 			
+ 			PROCEDURE GOODS_DELETE IS
+ 			or_id number(6);
+ 			begin
+ 				delete from pgoods_information
+ 				where :goods_blc.goods_id = goods_id;
+ 	
+ 			end goods_delete;
+ 			
+ 			PROCEDURE SHIPVIEW IS
+ 			begin
+  				go_item('GOODSSHIP_blc.goods_name');
+  				list_values;
+ 					go_block('ship_blc');
+ 					execute_query;
+ 			
+ 			END SHIPVIEW;
+ 			
+ 			PROCEDURE SHIP_AD IS
+ 			BEGIN
+ 				insert into pship_information values
+ 				(SHIPS_ID_SEQ.nextval, :shipadd_blc.ship_type, :shipadd_blc.ship_fee, :goodsship_blc.goods_id);
+ 			END SHIP_AD;
+ 			
+ 			PROCEDURE ship_de IS
+ 			begin
+ 				delete from pship_information
+ 				where goods_id = :goodsship_blc.goods_id and
+ 				ship_type = :shipadd_blc.ship_type;
+ 			end ship_de;
+ 			
+ 			PROCEDURE SHIP_UP IS
+ 			BEGIN
+ 				UPDATE pship_information set
+ 				ship_type = :shipadd_blc.ship_type,
+ 				ship_fee = :shipadd_blc.ship_fee
+ 				where goods_id = :goodsship_blc.goods_id and
+ 				ship_type = :shipadd_blc.ship_type;
+ 			end ship_up;
+ 			
+ 			PROCEDURE order_view is
+ 					begin
+ 					go_item('order_blc.order_number');
+  				list_values;
+  				go_block('ordercust_blc');
+ 					execute_query;
+ 					go_block('ordergoods_blc');
+ 					execute_query;
+ 					go_block('ordershi_blc');
+ 					execute_query;
+ 					end order_view;
+	 					
+ 			PROCEDURE SIGNUP IS
+ 				BEGIN
+ 					clear_form;
+ 					open_FORM('C:\Users\jl26123\Desktop\project\SIGNUP_Com');
+
+ 					END SIGNUP;
+ 		
+END;
+
+
+
+---Alters:
+
+
+
+PACKAGE alerts IS
+  PROCEDURE update_alt;
+  PROCEDURE GOODSUP_ALT;
+  PROCEDURE GOODSDE_ALT;
+  PROCEDURE NEW_ALT;
+  PROCEDURE SHIPAD_ALT;
+  PROCEDURE SHIPUP_ALT;
+  PROCEDURE SHIPDE_ALT;
+END;
+
+PACKAGE BODY Alerts IS
+  Procedure update_alt IS
+  		ALERT_BTN NUMBER;
+
+     BEGIN
+  
+        ALERT_BTN := SHOW_ALERT('update_alt');
+  
+        IF ALERT_BTN = ALERT_BUTTON1 THEN
+  				 
+  				 go_block('address_blc');
+  				 standard.commit;
+  				 go_block('password_blc');
+  				 standard.commit;
+  				 go_block('company_blc');
+  				 standard.commit;
+  				 
+  				 
+  	       MESSAGE('Your company information is updated');
+ 
+        ELSE
+       
+        	rollback;
+  			
+  				
+           MESSAGE('Your company information is not updated');
+  
+        END IF;
+     end update_alt;
+     
+     PROCEDURE NEW_ALT IS
+     	ALERT_BTN NUMBER;
+
+     BEGIN
+  
+        ALERT_BTN := SHOW_ALERT('new_alt');
+        IF ALERT_BTN = ALERT_BUTTON1 THEN
+        	go_block('goods_blc');
+        	standard.commit;
+        	MESSAGE('Successful');
+        	clear_block;
+        	go_block('class_blc');
+        	clear_block;
+        else
+        	rollback;
+        	Message('operating is cancal');
+        end if;
+     end new_alt;
+     
+     PROCEDURE GOODSUP_ALT IS
+     ALERT_BTN NUMBER;
+
+     BEGIN
+  
+        ALERT_BTN := SHOW_ALERT('goodsup_alt');
+        IF ALERT_BTN = ALERT_BUTTON1 THEN
+        	go_block('goods_blc');
+        	standard.commit;
+        	MESSAGE('Successful');
+        	clear_block;
+        	go_block('class_blc');
+        	clear_block;
+        else
+        	rollback;
+        	Message('operating is cancal');
+        end if;
+     end goodsup_alt;
+     
+     PROCEDURE GOODSde_ALT IS
+     ALERT_BTN NUMBER;
+
+     BEGIN
+  
+        ALERT_BTN := SHOW_ALERT('goodsde_alt');
+        IF ALERT_BTN = ALERT_BUTTON1 THEN
+		     	go_block('goods_blc');
+		        	standard.commit;
+		        	MESSAGE('Successful');
+		        	clear_block;
+		        	go_block('class_blc');
+        			clear_block;
+		        else
+		        	rollback;
+		        	Message('operating is cancal');
+		        end if;
+		     end goodsde_alt;
+     	
+     	PROCEDURE SHIPAD_ALT IS
+     	ALERT_BTN NUMBER;
+
+     BEGIN
+  
+        ALERT_BTN := SHOW_ALERT('shipad_alt');
+        IF ALERT_BTN = ALERT_BUTTON1 THEN
+        	go_block('shipadd_blc');
+        	standard.commit;
+        	Message('Successful');
+        	clear_block;
+        	go_block('ship_blc');
+        	execute_query;
+        else
+        	rollback;
+        	Message('operating is cancal');
+        end if;
+     end shipad_alt;
+     
+     Procedure shipup_alt is
+     ALERT_BTN NUMBER;
+
+     BEGIN
+  
+        ALERT_BTN := SHOW_ALERT('shipup_alt');
+        IF ALERT_BTN = ALERT_BUTTON1 THEN
+        	go_block('shipadd_blc');
+        	standard.commit;
+        	Message('Successful');
+        	clear_block;
+        	go_block('ship_blc');
+        	execute_query;
+        else
+        	rollback;
+        	Message('operating is cancal');
+        end if;
+     end shipup_alt;
+     
+     Procedure shipde_alt is
+     ALERT_BTN NUMBER;
+
+     BEGIN
+  
+        ALERT_BTN := SHOW_ALERT('shipde_alt');
+        IF ALERT_BTN = ALERT_BUTTON1 THEN
+        	go_block('shipadd_blc');
+        	standard.commit;
+        	Message('Successful');
+        	clear_block;
+        	go_block('ship_blc');
+        	execute_query;
+        else
+        	rollback;
+        	Message('operating is cancal');
+        end if;
+     end shipde_alt;
+END;
+
+
+---trigger
+
+
+
+PACKAGE Trigger_act IS
+  PROCEDURE FORM_NEW;
+  PROCEDURE CLASS_NAME_LIST_CHANGE;
+
+END;
+
+PACKAGE BODY TRIGGER_ACT IS
+  PROCEDURE FORM_NEW IS
+	re_1 recordgroup;
+	n1 number;
+begin
+	re_1 := create_group_from_query('re_1','select class_name,to_char(class_name) from pgoods_class');
+	n1 := populate_group(re_1);
+	populate_list('class_blc.class_name','re_1');
+end FORM_NEW;
+
+	PROCEDURE CLASS_NAME_LIST_CHANGE IS
+	begin
+	select class_number into :class_blc.class_number from pgoods_class
+	where :class_name = class_name;
+	end CLASS_NAME_LIST_CHANGE;
+
+		
+END;

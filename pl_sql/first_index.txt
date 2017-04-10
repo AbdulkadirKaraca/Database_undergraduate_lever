@@ -1,0 +1,32 @@
+--Code documentation:
+
+--The first form(choice company or customer):
+--Button:
+
+PACKAGE button IS
+  PROCEDURE COST_BTN;
+  PROCEDURE COM_BTN;
+END;
+
+PACKAGE BODY BUTTON IS
+  PROCEDURE COST_BTN IS
+  BEGIN
+  	OPEN_FORM('C:\Users\jl26123\Desktop\project\CUmSTOMER');
+  END COST_BTN;
+  
+  PROCEDURE COM_BTN IS
+  BEGIN
+  	OPEN_FORM('C:\Users\jl26123\Desktop\project\COMPANY');
+  	END COM_BTN;
+END;
+
+
+
+
+
+
+
+
+
+
+

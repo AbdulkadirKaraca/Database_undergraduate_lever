@@ -1,0 +1,167 @@
+----inserting records into Paddress
+DROP SEQUENCE ADDRESS_ID_SEQ;
+CREATE SEQUENCE ADDRESS_ID_SEQ
+START WITH 1
+INCREMENT BY 1;
+
+INSERT INTO Paddress VALUES
+(ADDRESS_ID_SEQ.NEXTVAL, '3 Kent Road','Bloomsburg','PA','Unite State',17815);
+INSERT INTO Paddress VALUES
+(ADDRESS_ID_SEQ.NEXTVAL, '222 99th Street ','Jackson','PA','Unite State',99998);
+INSERT INTO Paddress VALUES
+(ADDRESS_ID_SEQ.NEXTVAL, '200 E MAIN ST','Phoenix','AZ','Unite State',85123);
+INSERT INTO Paddress VALUES
+(ADDRESS_ID_SEQ.NEXTVAL, '300 Boylston Ave E','Seattle','WA','Unite State',98102);
+INSERT INTO Paddress VALUES
+(ADDRESS_ID_SEQ.NEXTVAL, '78 Arm Street','NewYork','NY','Unite State',14975);
+INSERT INTO Paddress VALUES
+(ADDRESS_ID_SEQ.NEXTVAL, '435 blue Street','NewYork','NY','Unite State',14975);
+INSERT INTO Paddress VALUES
+(ADDRESS_ID_SEQ.NEXTVAL, '1 Broadway Street','NewYork','NY','Unite State',14975);
+INSERT INTO Paddress VALUES
+(ADDRESS_ID_SEQ.NEXTVAL, '33 Main Street','Bloomsbury','PA','Unite State',17815);
+
+
+----inserting records into Pcustlogin_infr
+INSERT INTO Pcustlogin_infr VALUES
+('jl66666@huskies.bloomu.edu','123456');
+INSERT INTO Pcustlogin_infr VALUES
+('Mary@gmail.com','abcdef');
+INSERT INTO Pcustlogin_infr VALUES
+('Jane@yahoo.com','123abc');
+INSERT INTO Pcustlogin_infr VALUES
+('John@163.com','abc456');
+
+
+----inserting records into Paddress
+DROP SEQUENCE CUSTOMER_ID_SEQ;
+CREATE SEQUENCE CUSTOMER_ID_SEQ
+START WITH 1
+INCREMENT BY 1;
+
+INSERT INTO Pcustomer VALUES
+(CUSTOMER_ID_SEQ.NEXTVAL,'Lu','Jixiang',NULL,5703943973,'jl66666@huskies.bloomu.edu',to_date('06/06/1992','mm/dd/yyyy'),1);
+INSERT INTO Pcustomer VALUES
+(CUSTOMER_ID_SEQ.NEXTVAL,'Roe','Mary',NULL,5703943333,'Mary@gmail.com',to_date('08/06/1989','mm/dd/yyyy'),2);
+INSERT INTO Pcustomer VALUES
+(CUSTOMER_ID_SEQ.NEXTVAL,'Roe','Jane',NULL,5703941233,'Jane@yahoo.com',to_date('12/06/1979','mm/dd/yyyy'),3);
+INSERT INTO Pcustomer VALUES
+(CUSTOMER_ID_SEQ.NEXTVAL,'Smith','John',NULL,5703943666,'John@163.com',to_date('03/06/2001','mm/dd/yyyy'),4);
+
+
+----inserting records into Pcard_information
+
+INSERT INTO Pcard_information VALUES
+(6589423578954231,'credit',123,1);
+INSERT INTO Pcard_information VALUES
+(7985464134631532,'debit',123,1);
+INSERT INTO Pcard_information VALUES
+(6589423578978563,'credit',456,2);
+INSERT INTO Pcard_information VALUES
+(4943154631461316,'credit',795,3);
+INSERT INTO Pcard_information VALUES
+(7956431346613264,'debit',963,4);
+
+----inserting records into Pcomlogin_information
+
+INSERT INTO Pcomlogin_information VALUES
+('Goldecoinstar@gmail.com','123456');
+INSERT INTO Pcomlogin_information VALUES
+('Beauty@gmail.com','123456');
+INSERT INTO Pcomlogin_information VALUES
+('SUBHAPP@gmail.com','123def');
+INSERT INTO Pcomlogin_information VALUES
+('Huskies@gmail.com','abc456');
+
+----inserting records into Pcompany
+
+DROP SEQUENCE COMPANY_ID_SEQ;
+CREATE SEQUENCE COMPANY_ID_SEQ
+START WITH 1
+INCREMENT BY 1;
+
+INSERT INTO Pcompany VALUES
+(COMPANY_ID_SEQ.NEXTVAL,'Goldecoinstar',5703456289,'Goldecoinstar@gmail.com','8945123498768521',5);
+INSERT INTO Pcompany VALUES
+(COMPANY_ID_SEQ.NEXTVAL,'Beauty',5707894562,'Beauty@gmail.com','9865423596874412',6);
+INSERT INTO Pcompany VALUES
+(COMPANY_ID_SEQ.NEXTVAL,'SUBHAPP',6895123698,'SUBHAPP@gmail.com','1568963378459966',7);
+INSERT INTO Pcompany VALUES
+(COMPANY_ID_SEQ.NEXTVAL,'Huskies',5703948754,'Huskies@gmail.com','8945123498768521',8);
+
+----inserting records into Pgoods_class
+	
+DROP SEQUENCE CLASS_ID_SEQ;
+CREATE SEQUENCE CLASS_ID_SEQ
+START WITH 1
+INCREMENT BY 1;
+
+INSERT INTO Pgoods_class VALUES
+(CLASS_ID_SEQ.NEXTVAL,'Mobile Phone');
+INSERT INTO Pgoods_class VALUES
+(CLASS_ID_SEQ.NEXTVAL,'Handbag');
+INSERT INTO Pgoods_class VALUES
+(CLASS_ID_SEQ.NEXTVAL,'Player');
+INSERT INTO Pgoods_class VALUES
+(CLASS_ID_SEQ.NEXTVAL,'Bed');
+
+----inserting records into Pgoods_information
+
+DROP SEQUENCE GOODS_ID_SEQ;
+CREATE SEQUENCE GOODS_ID_SEQ
+START WITH 1
+INCREMENT BY 1;
+
+INSERT INTO Pgoods_information VALUES
+(GOODS_ID_SEQ.NEXTVAL,'Apple IPhone 5S(16G)','Unlocked and White','9.6 ounces',718.00,1199.00,'www.xxxx.com',50,1,1);
+INSERT INTO Pgoods_information VALUES
+(GOODS_ID_SEQ.NEXTVAL,'Coach Park Signature Hobo','Black','1 pounds',197.99,358.00,'www.xxxx.com',100,2,2);
+INSERT INTO Pgoods_information VALUES
+(GOODS_ID_SEQ.NEXTVAL,'Apple ipod touch(16G)','Silver','3 ounces',224.00,229.00,'www.xxxx.com',100,3,3);
+INSERT INTO Pgoods_information VALUES
+(GOODS_ID_SEQ.NEXTVAL,'Coaster Fine Furniture 300260q Bed, Queen','Durable Leather like vinyl','72.6 pounds',163.49,299.00,'www.xxxx.com',50,4,4);
+
+----insert records into Pship_information
+
+DROP SEQUENCE SHIPS_ID_SEQ;
+CREATE SEQUENCE SHIPS_ID_SEQ
+START WITH 1
+INCREMENT BY 1;
+
+INSERT INTO Pship_information VALUES
+(SHIPS_ID_SEQ.NEXTVAL,'Domestic Standard',3.99,1);
+INSERT INTO Pship_information VALUES
+(SHIPS_ID_SEQ.NEXTVAL,'Domestic Expedited',6.19,2);
+INSERT INTO Pship_information VALUES
+(SHIPS_ID_SEQ.NEXTVAL,'Domestic Standard',3.99,3);
+INSERT INTO Pship_information VALUES
+(SHIPS_ID_SEQ.NEXTVAL,'Domestic Standard',50,4);
+
+----insert records into Porder_information
+
+DROP SEQUENCE ORDERS_ID_SEQ;
+CREATE SEQUENCE ORDERS_ID_SEQ
+START WITH 100
+INCREMENT BY 1;
+
+INSERT INTO Porder_information VALUES
+(ORDERS_ID_SEQ.NEXTVAL,to_date('03/15/2014','mm/dd/yyyy'),1,12.00,733.99,1,1,1);
+INSERT INTO Porder_information VALUES
+(ORDERS_ID_SEQ.NEXTVAL,to_date('03/20/2014','mm/dd/yyyy'),1,5.00,209.18,2,2,2);
+INSERT INTO Porder_information VALUES
+(ORDERS_ID_SEQ.NEXTVAL,to_date('03/23/2014','mm/dd/yyyy'),1,6.00,233.99,3,3,3);
+INSERT INTO Porder_information VALUES
+(ORDERS_ID_SEQ.NEXTVAL,to_date('03/24/2014','mm/dd/yyyy'),1,20.00,183.49,4,4,4);
+
+----insert records into Ppay_state
+
+INSERT INTO Ppay_state VALUES
+(6589423578954231,100,'yes',to_date('03/15/2014','mm/dd/yyyy'));
+INSERT INTO Ppay_state VALUES
+(6589423578978563,101,'yes',to_date('03/20/2014','mm/dd/yyyy'));
+INSERT INTO Ppay_state VALUES
+(4943154631461316,102,'yes',to_date('03/23/2014','mm/dd/yyyy'));
+INSERT INTO Ppay_state VALUES
+(7956431346613264,103,'no',NULL);
+
+COMMIT;
